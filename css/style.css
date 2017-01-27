@@ -1,0 +1,33 @@
+body {
+  background-color: #D3D3D3;
+}
+
+#app{
+  width: 100%;
+}
+
+#cat_menu {
+  float:left;
+  width: 20%;
+}
+
+#click-cat-area {
+  width: 50%;
+  text-align: center;
+}
+
+
+#cat-pic {
+  height: 300px;
+  width: 100%;
+}
+
+#cat1 {
+  float: right;
+  height: 300px;
+  width: 300px;
+}
+
+#counter {
+  float: right;
+}
