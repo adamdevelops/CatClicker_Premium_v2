@@ -74,51 +74,138 @@ var model = {
 //     document.body.appendChild(elem);
 // };
 
+/* ============== Octopus ================== */
 
+var octopus = {
 
-// Event Listner for cat menu
-for (var i = 0; i < model.kittycats.length; i++) {
+    init: function(){
+      // Set current cat on intialization to the first cat in the cat list
+      model.currentCat = model.kittycats[0];
 
-    // This is the number we're on...
-    var cat = model.kittycats[i];
-    console.log(cat) //see what objects are stored in cat variable
+      // tell our views to initialize
+       catListView.init();
+       catView.init();
+    },
 
-    // We're creating a DOM element for the cat object
-    var elem = document.createElement('li');
-    elem.textContent = cat.name;
-    var hr_elem = document.createElement('hr');
+    getCats: function(){
+      return model.kittycats;
+    },
 
+    getCurrentCat: function(){
+      return model.currentCat;
+    },
 
-    // ... and when we click, alert the value of the cat's name
-    elem.addEventListener('click', (function(catCopy) {
-        return function() {
-            alert(catCopy.name);
+    setCurrentCat: function(cat){
+      model.currentCat = cat;
+    },
 
-            currentCat = catCopy;
-            console.log(currentCat);
-            var catgreeting_elem = document.getElementById("cat-greeting").innerHTML = '<p>Say hi to '+ catCopy.name + '!</p>';
-            var pic_elem = document.getElementById("cat-pic").innerHTML = '<img id ="cat1" src="'+ catCopy.picture + '"></img>';
-        };
-    })(cat));
-
-    //Append the list elements to the 'cat_menu' div
-    document.getElementById("cat_menu").appendChild(elem);
-    document.getElementById("cat_menu").appendChild(hr_elem);
+    incrementCounter: function(){
+      model.currentCat.click_count++;
+      catView.render();
+    }
 
 };
 
+
+
+// Click counter
 var count = 0;
 
-document.getElementById("cat-pic").addEventListener('click', (function(count) {
-  document.getElementById("counter").innerHTML = '';
 
-    return function() {
-      ++count;
-      console.log(count);
-      document.getElementById("counter").innerHTML = "Total number of clicks on all cats are " + count + " times.";
+
+
+/* ============== View ================== */
+var catView = {
+
+  init: function() {
+    // We're creating a DOM element for the cat object
+    this.catgreetingElem = document.getElementById("cat-greeting");
+    this.picElem = document.getElementById("cat-pic");
+
+    // render this view (update the DOM elements with the right values)
+    this.render();
+  },
+
+  render: function(){
+    var cat, elem, i;
+
+    var cats = octopus.getCats();
+
+    for (i = 0; i < cats.length; i++) {
+      console.log("In render function of cat area view");
+
+        // This is the number we're on...
+        var cat = cats[i];
+        console.log(cat) //see what objects are stored in cat variable
+
+        document.getElementById("cat-pic").addEventListener('click', (function(count) {
+          document.getElementById("counter").innerHTML = '';
+
+            return function() {
+              ++count;
+              console.log(count);
+              document.getElementById("counter").innerHTML = "Total number of clicks on all cats are " + count + " times.";
+            };
+        })(count));
+
+
+        this.catgreetingElem.innerHTML = '<p>Say hi to '+ cat.name + '!</p>';
+        this.picElem.innerHTML = '<img id ="cat1" src="'+ cat.picture + '"></img>';
+
+
     };
-})(count));
+  }
 
+};
+
+var catListView = {
+
+  init: function() {
+    // We're creating a DOM element for the cat object
+    this.catMenuElem = document.getElementById("cat_menu");
+
+    this.render();
+  },
+
+  render: function(){
+    var cat, elem, i;
+
+    var cats = octopus.getCats();
+
+    for (i = 0; i < cats.length; i++) {
+        console.log("In render function of cat list view");
+        // This is the number we're on...
+        cat = cats[i];
+        console.log(cat) //see what objects are stored in cat variable
+
+        // We're creating a DOM element for the cat object
+        var li_elem = document.createElement('li');
+        li_elem.textContent = cat.name;
+        var hr_elem = document.createElement('hr');
+
+        // ... and when we click, alert the value of the cat's name
+        li_elem.addEventListener('click', (function(catCopy) {
+            return function() {
+                alert(catCopy.name);
+
+                octopus.setCurrentCat(catCopy);
+
+
+            };
+        })(cat));
+
+
+        //Append the list and hr elements to the 'cat_menu' div
+        this.catMenuElem.appendChild(li_elem);
+        this.catMenuElem.appendChild(hr_elem);
+
+    }
+  }
+
+};
+
+// make it go!
+octopus.init();
 
 //Add cat's picture to Cat-pic div     --------------TESTING------------------------   style="position = absolute; TOP:35px; LEFT:170px; WIDTH:50px; HEIGHT:50px"
 //document.getElementById("cat-pic").appendChild(elem2);
