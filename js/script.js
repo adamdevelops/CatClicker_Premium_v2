@@ -112,8 +112,6 @@ var octopus = {
 var count = 0;
 
 
-
-
 /* ============== View ================== */
 var catView = {
 
@@ -121,39 +119,35 @@ var catView = {
     // We're creating a DOM element for the cat object
     this.catgreetingElem = document.getElementById("cat-greeting");
     this.picElem = document.getElementById("cat-pic");
+    this.counterElem = document.getElementById("counter");
 
     // render this view (update the DOM elements with the right values)
     this.render();
   },
 
   render: function(){
-    var cat, elem, i;
+    console.log("In render function of cat area view");
 
-    var cats = octopus.getCats();
+    var elem, i;
 
-    for (i = 0; i < cats.length; i++) {
-      console.log("In render function of cat area view");
+    var cat = octopus.getCurrentCat();
 
-        // This is the number we're on...
-        var cat = cats[i];
-        console.log(cat) //see what objects are stored in cat variable
+    console.log(cat) //see what objects are stored in cat variable
 
-        document.getElementById("cat-pic").addEventListener('click', (function(count) {
-          document.getElementById("counter").innerHTML = '';
+    this.picElem.addEventListener('click', (function(count) {
+      //this.counterElem.innerHTML = '';
 
-            return function() {
-              ++count;
-              console.log(count);
-              document.getElementById("counter").innerHTML = "Total number of clicks on all cats are " + count + " times.";
-            };
-        })(count));
+        return function() {
+          octopus.incrementCounter();
+          console.log(count);
+          this.counterElem.innerHTML = "Total number of clicks on all cats are " + count + " times.";
+        };
+    })(count));
 
 
-        this.catgreetingElem.innerHTML = '<p>Say hi to '+ cat.name + '!</p>';
-        this.picElem.innerHTML = '<img id ="cat1" src="'+ cat.picture + '"></img>';
+    this.catgreetingElem.innerHTML = '<p>Say hi to '+ cat.name + '!</p>';
+    this.picElem.innerHTML = '<img id ="cat1" src="'+ cat.picture + '"></img>';
 
-
-    };
   }
 
 };
@@ -189,11 +183,10 @@ var catListView = {
                 alert(catCopy.name);
 
                 octopus.setCurrentCat(catCopy);
-
+                catView.render();
 
             };
         })(cat));
-
 
         //Append the list and hr elements to the 'cat_menu' div
         this.catMenuElem.appendChild(li_elem);
