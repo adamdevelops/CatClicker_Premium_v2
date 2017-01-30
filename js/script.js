@@ -101,6 +101,7 @@ var octopus = {
 
     incrementCounter: function(){
       model.currentCat.click_count++;
+      console.log(model.currentCat.click_count);
       catView.render();
     }
 
@@ -138,8 +139,7 @@ var catView = {
       //this.counterElem.innerHTML = '';
 
         return function() {
-          octopus.incrementCounter();
-          console.log(count);
+          octopus.incrementCounter(cat);
           this.counterElem.innerHTML = "Total number of clicks on all cats are " + count + " times.";
         };
     })(count));
